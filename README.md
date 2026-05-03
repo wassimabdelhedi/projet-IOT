@@ -4,6 +4,6 @@ Ce projet consiste en une solution de surveillance de l'énergie intelligente ut
 
 ## Structure du Projet
 
-- `wokwi/` : Simulation du circuit ESP32.
-- `nodered/` : Flux Node-RED pour la gestion des données.
-- `dashboard/` : Interface utilisateur web.
+- `simulateur/` : Simulateur Python de l'ESP32 via MQTT.
+- `nodered/`    : Flux Node-RED pour la gestion des données.
+- `dashboard/`  : Interface utilisateur web.
