@@ -1,0 +1,741 @@
+[
+    {
+        "id": "tab_smart_energy",
+        "type": "tab",
+        "label": "Smart Energy Monitoring",
+        "disabled": false
+    },
+    {
+        "id": "mqtt_broker_local",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "nodered-sem-client",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ui_tab_main",
+        "type": "ui_tab",
+        "name": "Smart Energy",
+        "icon": "flash_on",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui_group_power",
+        "type": "ui_group",
+        "name": "⚡ Mesures en Temps Réel",
+        "tab": "ui_tab_main",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_relay",
+        "type": "ui_group",
+        "name": "🔌 Contrôle Relais",
+        "tab": "ui_tab_main",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_chart",
+        "type": "ui_group",
+        "name": "📈 Historique Puissance",
+        "tab": "ui_tab_main",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_alerts",
+        "type": "ui_group",
+        "name": "🚨 Alertes",
+        "tab": "ui_tab_main",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "223cbc69f8a729a9",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "mqtt_in_sensors",
+        "type": "mqtt in",
+        "z": "tab_smart_energy",
+        "name": "MQTT — Mesures ESP32",
+        "topic": "sem/bat1/node1/sensors/power",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "mqtt_broker_local",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "parse_json"
+            ]
+        ]
+    },
+    {
+        "id": "parse_json",
+        "type": "json",
+        "z": "tab_smart_energy",
+        "name": "Parse JSON",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "check_threshold",
+                "firebase_write",
+                "split_power",
+                "split_current",
+                "split_voltage",
+                "split_relay_status",
+                "debug_in"
+            ]
+        ]
+    },
+    {
+        "id": "split_power",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "→ power_W",
+        "func": "msg.payload = msg.payload.power_W || 0;\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 80,
+        "wires": [
+            [
+                "gauge_power",
+                "chart_power"
+            ]
+        ]
+    },
+    {
+        "id": "split_current",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "→ current_A",
+        "func": "msg.payload = msg.payload.current_A || 0;\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 120,
+        "wires": [
+            [
+                "gauge_current"
+            ]
+        ]
+    },
+    {
+        "id": "split_voltage",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "→ voltage_V",
+        "func": "msg.payload = msg.payload.voltage_V || 230;\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 180,
+        "wires": [
+            [
+                "text_voltage"
+            ]
+        ]
+    },
+    {
+        "id": "split_relay_status",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "→ relay state",
+        "func": "var relayVal = msg.payload.relay;\nif (relayVal === undefined) {\n    relayVal = msg.payload.relay_open ? 0 : 1;\n}\nmsg.payload = relayVal;\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 240,
+        "wires": [
+            [
+                "text_relay_status"
+            ]
+        ]
+    },
+    {
+        "id": "gauge_power",
+        "type": "ui_gauge",
+        "z": "tab_smart_energy",
+        "name": "Puissance",
+        "group": "ui_group_power",
+        "order": 1,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Puissance",
+        "label": "W",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 400,
+        "colors": [
+            "#10b981",
+            "#f59e0b",
+            "#ef4444"
+        ],
+        "seg1": "200",
+        "seg2": "300",
+        "className": "",
+        "x": 820,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "gauge_current",
+        "type": "ui_gauge",
+        "z": "tab_smart_energy",
+        "name": "Intensité",
+        "group": "ui_group_power",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Intensité",
+        "label": "A",
+        "format": "{{value | number:2}}",
+        "min": 0,
+        "max": 2,
+        "colors": [
+            "#10b981",
+            "#f59e0b",
+            "#ef4444"
+        ],
+        "seg1": "0.8",
+        "seg2": "1.3",
+        "className": "",
+        "x": 820,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "text_voltage",
+        "type": "ui_text",
+        "z": "tab_smart_energy",
+        "group": "ui_group_power",
+        "order": 3,
+        "width": "4",
+        "height": "2",
+        "name": "Tension",
+        "label": "Tension (V)",
+        "format": "{{msg.payload}} V",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#38bdf8",
+        "x": 820,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "text_relay_status",
+        "type": "ui_text",
+        "z": "tab_smart_energy",
+        "group": "ui_group_relay",
+        "order": 1,
+        "width": "6",
+        "height": "2",
+        "name": "État Relais",
+        "label": "État Relais",
+        "format": "{{msg.payload == 1 ? '✅ ACTIF (ON)' : '❌ COUPÉ (OFF)'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#f8fafc",
+        "x": 820,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "chart_power",
+        "type": "ui_chart",
+        "z": "tab_smart_energy",
+        "name": "Courbe Puissance",
+        "group": "ui_group_chart",
+        "order": 1,
+        "width": "12",
+        "height": "5",
+        "label": "Puissance (W)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "En attente de données...",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "420",
+        "removeOlder": 1,
+        "removeOlderPoints": "50",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#38bdf8"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 820,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "switch_relay_manual",
+        "type": "ui_switch",
+        "z": "tab_smart_energy",
+        "name": "Commande Manuelle Relais",
+        "label": "Relais Manuel",
+        "tooltip": "Activer / Couper le relais",
+        "group": "ui_group_relay",
+        "order": 2,
+        "width": "6",
+        "height": "2",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "1",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "0",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1380,
+        "y": 280,
+        "wires": [
+            [
+                "mqtt_out_relay"
+            ]
+        ]
+    },
+    {
+        "id": "debug_in",
+        "type": "debug",
+        "z": "tab_smart_energy",
+        "name": "Debug mesures",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "check_threshold",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "Vérif seuil + logique délestage",
+        "func": "// ─── CONFIGURATION ────────────────────────────\nconst SEUIL_W      = 300;\nconst HYSTERESIS_W = 30;\n\nvar power   = msg.payload.power_W   || 0;\nvar current = msg.payload.current_A || 0;\nvar nodeId  = msg.payload.node_id   || 'unknown';\n\nvar relayOpen = flow.get('relay_open') || false;\n\nvar cmd = null;\nvar alert = null;\n\nif (power > SEUIL_W && !relayOpen) {\n    relayOpen = true;\n    flow.set('relay_open', true);\n    cmd   = '0';\n    alert = {\n        type    : 'SURCHARGE',\n        power_W : power,\n        seuil_W : SEUIL_W,\n        action  : 'Relais ouvert — charge coupée',\n        ts      : new Date().toISOString()\n    };\n    node.warn('ALERTE SURCHARGE : ' + power + 'W > ' + SEUIL_W + 'W');\n\n} else if (power < (SEUIL_W - HYSTERESIS_W) && relayOpen) {\n    relayOpen = false;\n    flow.set('relay_open', false);\n    cmd   = '1';\n    alert = {\n        type    : 'RETOUR_NORMAL',\n        power_W : power,\n        seuil_W : SEUIL_W,\n        action  : 'Relais fermé — charge rétablie',\n        ts      : new Date().toISOString()\n    };\n}\n\nmsg.payload.relay_open = relayOpen;\nmsg.payload.ts = new Date().toISOString();\n\nvar outCmd = null;\nvar outAlert = null;\n\nif (cmd !== null) {\n    outCmd   = { payload: cmd, topic: 'sem/bat1/node1/cmd/relay' };\n    outAlert = { payload: alert };\n}\n\nreturn [msg, outCmd, outAlert];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 400,
+        "wires": [
+            [],
+            [
+                "mqtt_out_relay",
+                "debug_relay"
+            ],
+            [
+                "firebase_alerts",
+                "format_alert_text",
+                "debug_alert"
+            ]
+        ]
+    },
+    {
+        "id": "format_alert_text",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "Format alerte → texte UI",
+        "func": "var a = msg.payload;\nif (!a) return null;\nvar icon = a.type === 'SURCHARGE' ? '🔴 SURCHARGE' : '🟢 RETOUR NORMAL';\nmsg.payload = icon + ' | ' + a.power_W.toFixed(1) + 'W | ' + a.action + ' | ' + new Date(a.ts).toLocaleTimeString();\nreturn msg;",
+        "outputs": 1,
+        "x": 850,
+        "y": 740,
+        "wires": [
+            [
+                "text_alert"
+            ]
+        ]
+    },
+    {
+        "id": "text_alert",
+        "type": "ui_text",
+        "z": "tab_smart_energy",
+        "group": "ui_group_alerts",
+        "order": 1,
+        "width": "12",
+        "height": "2",
+        "name": "Dernière Alerte",
+        "label": "Dernière alerte",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 14,
+        "color": "#ef4444",
+        "x": 1080,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "mqtt_out_relay",
+        "type": "mqtt out",
+        "z": "tab_smart_energy",
+        "name": "MQTT → ESP32 Commande Relais",
+        "topic": "sem/bat1/node1/cmd/relay",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqtt_broker_local",
+        "x": 1090,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "debug_relay",
+        "type": "debug",
+        "z": "tab_smart_energy",
+        "name": "Debug commande relais",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 1030,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "debug_alert",
+        "type": "debug",
+        "z": "tab_smart_energy",
+        "name": "Debug alertes",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 980,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "inject_manual_on",
+        "type": "inject",
+        "z": "tab_smart_energy",
+        "name": "FORCER relais ON",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "sem/bat1/node1/cmd/relay",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "payload": "1",
+        "payloadType": "str",
+        "x": 1330,
+        "y": 400,
+        "wires": [
+            [
+                "mqtt_out_relay"
+            ]
+        ]
+    },
+    {
+        "id": "inject_manual_off",
+        "type": "inject",
+        "z": "tab_smart_energy",
+        "name": "FORCER relais OFF",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "sem/bat1/node1/cmd/relay",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "payload": "0",
+        "payloadType": "str",
+        "x": 1370,
+        "y": 520,
+        "wires": [
+            [
+                "mqtt_out_relay"
+            ]
+        ]
+    },
+    {
+        "id": "firebase_write",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "Prépare payload Firebase mesures",
+        "func": "// Structure Firebase : /readings/{timestamp}\nvar ts = Date.now();\nmsg.url = 'https://smart-energy-iot-461ff-default-rtdb.firebaseio.com/readings/' + ts + '.json';\nmsg.method = 'PUT';\nmsg.headers = { 'Content-Type': 'application/json' };\nmsg.payload = {\n    node_id    : msg.payload.node_id   || 'esp32-energy-01',\n    current_A  : msg.payload.current_A || 0,\n    voltage_V  : msg.payload.voltage_V || 230,\n    power_W    : msg.payload.power_W   || 0,\n    relay_open : msg.payload.relay_open || false,\n    ts         : new Date(ts).toISOString()\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 20,
+        "wires": [
+            [
+                "http_firebase_readings"
+            ]
+        ]
+    },
+    {
+        "id": "http_firebase_readings",
+        "type": "http request",
+        "z": "tab_smart_energy",
+        "name": "POST → Firebase /readings",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1020,
+        "y": 20,
+        "wires": [
+            [
+                "debug_firebase_ok"
+            ]
+        ]
+    },
+    {
+        "id": "debug_firebase_ok",
+        "type": "debug",
+        "z": "tab_smart_energy",
+        "name": "Firebase Readings OK",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 1300,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "firebase_alerts",
+        "type": "function",
+        "z": "tab_smart_energy",
+        "name": "Prépare payload Firebase alertes",
+        "func": "var ts = Date.now();\nmsg.url = 'https://smart-energy-iot-461ff-default-rtdb.firebaseio.com/alerts/' + ts + '.json';\nmsg.method = 'PUT';\nmsg.headers = { 'Content-Type': 'application/json' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 640,
+        "wires": [
+            [
+                "http_firebase_alerts"
+            ]
+        ]
+    },
+    {
+        "id": "http_firebase_alerts",
+        "type": "http request",
+        "z": "tab_smart_energy",
+        "name": "POST → Firebase /alerts",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1270,
+        "y": 640,
+        "wires": [
+            [
+                "debug_alert_firebase"
+            ]
+        ]
+    },
+    {
+        "id": "debug_alert_firebase",
+        "type": "debug",
+        "z": "tab_smart_energy",
+        "name": "Firebase Alerte OK",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 1550,
+        "y": 640,
+        "wires": []
+    }
+]

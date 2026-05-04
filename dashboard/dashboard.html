@@ -52,6 +52,7 @@
             letter-spacing: -1px;
             background: linear-gradient(to right, var(--primary), var(--accent));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -244,7 +245,13 @@
         function updateUI(data) {
             const power = data.power_W || 0;
             const current = data.current_A || 0;
-            const relay = data.relay === 1 || data.relay === true;
+            // Déterminer l'état (ON si relay=1 ou si relay_open=false)
+            let isON = false;
+            if (data.relay !== undefined) {
+                isON = (data.relay === 1 || data.relay === true);
+            } else if (data.relay_open !== undefined) {
+                isON = (data.relay_open === false || data.relay_open === 0);
+            }
 
             // Update Text
             elPower.innerHTML = `${power.toFixed(1)}<span class="unit">W</span>`;
@@ -256,7 +263,7 @@
             elBarPower.style.backgroundColor = power > 300 ? 'var(--danger)' : 'var(--primary)';
 
             // Update Relay
-            if (relay) {
+            if (isON) {
                 elRelay.className = "relay-status status-on";
                 elRelayText.innerText = "ACTIF (ON)";
                 elRelayText.style.color = "var(--success)";

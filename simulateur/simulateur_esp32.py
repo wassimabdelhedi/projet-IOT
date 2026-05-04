@@ -11,7 +11,7 @@ import paho.mqtt.client as mqtt
 import json, time, random
 
 # ── CONFIG ──────────────────────────────────────
-BROKER    = "broker.emqx.io"
+BROKER    = "localhost"    
 PORT      = 1883
 # ID unique pour éviter les conflits et déconnexions
 CLIENT_ID = f"esp32-sem-sim-{random.randint(100, 999)}"
@@ -21,7 +21,7 @@ T_CMD     = "sem/bat1/node1/cmd/relay"
 T_STATUS  = "sem/bat1/node1/status/alive"
 
 SEUIL_W   = 300.0
-VOLTAGE   = 230.0
+VOLTAGE   = 230.0   # Tension nominale réseau européen (EN 50160)
 
 # ── ÉTAT ────────────────────────────────────────
 relay_on  = True
@@ -76,7 +76,6 @@ def next_power():
 
     return round(power_val, 1)
 
-# ── MAIN ────────────────────────────────────────
 def main():
     global relay_on
 
@@ -117,7 +116,9 @@ def main():
                 continue
 
             power   = next_power()
-            current = round(power / VOLTAGE, 2)
+            # Légère variation de tension ±5V autour de 230V (réaliste réseau EU)
+            voltage = round(230.0 + random.uniform(-5, 5), 1)
+            current = round(power / voltage, 2)
 
             # Logique de protection locale (Délestage)
             if power > SEUIL_W and relay_on:
@@ -128,7 +129,7 @@ def main():
                 "node_id"   : CLIENT_ID,
                 "power_W"   : power,
                 "current_A" : current,
-                "voltage_V" : VOLTAGE,
+                "voltage_V" : voltage,
                 "relay"     : 1 if relay_on else 0,
                 "seuil_ok"  : 1 if power <= SEUIL_W else 0,
                 "ts"        : time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -144,6 +145,7 @@ def main():
             # Affichage formaté exactement comme demandé
             print(f"[{pub_count:03d}] {status}  "
                   f"P={power:6.1f}W  "
+                  f"V={voltage:5.1f}V  "
                   f"I={current:.2f}A  "
                   f"relay={relay_str}"
                   f"{alert}")

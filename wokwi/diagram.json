@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "author": "Wassim Abdelhedi",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": 120, "left": -150, "attrs": {} },
+    { "type": "wokwi-led", "id": "led_relay", "top": -100, "left": 150, "attrs": { "color": "red", "label": "CHARGE/RELAIS" } },
+    { "type": "wokwi-led", "id": "led_status", "top": -60, "left": 150, "attrs": { "color": "green", "label": "STATUT" } }
+  ],
+  "connections": [
+    [ "esp:TX", "esp:RX", "green", [ "h0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "pot1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "pot1:SIG", "esp:34", "blue", [ "v0" ] ],
+    [ "esp:26", "led_relay:A", "red", [ "v0" ] ],
+    [ "led_relay:K", "esp:GND.2", "black", [ "v0" ] ],
+    [ "esp:27", "led_status:A", "green", [ "v0" ] ],
+    [ "led_status:K", "esp:GND.2", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
