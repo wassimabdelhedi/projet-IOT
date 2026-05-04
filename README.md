@@ -55,6 +55,4 @@ Le système intègre une logique de protection intelligente :
 - **Base de données** : Firebase Realtime DB.
 - **Outils de développement** : Python 3.x, Node-RED v4.x, Mosquitto.
 
-## Auteur
-**Wassim Abdelhedi**
-Expert en Développement et Intégration IoT.
+
